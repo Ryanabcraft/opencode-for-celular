@@ -8,7 +8,7 @@ Testado num **moto g32, Android 13, arm64**: TUI abre, aceita prompt e o modelo 
 ## Cole isto no Termux
 
 ```bash
-pkg install -y curl unzip ripgrep && curl -fsSL https://raw.githubusercontent.com/Ryanabcraft/opencode-for-celular/main/install-termux.sh | bash
+curl -fsSL https://raw.githubusercontent.com/Ryanabcraft/opencode-for-celular/main/install-termux.sh | bash
 ```
 
 Depois:
@@ -30,12 +30,13 @@ Rodar o mesmo comando de novo **atualiza** para a release mais nova.
 ## O que o instalador faz
 
 1. Pede a permissão de armazenamento (`termux-setup-storage`) — só se você ainda não liberou, e negar não trava a instalação. É isso que deixa o OpenCode abrir projetos que estão no `/sdcard`.
-2. Descobre a release mais nova do [guysoft/opencode-termux](https://github.com/guysoft/opencode-termux) (o build Android do OpenCode).
-2. Baixa o zip e **confere o SHA256** contra o manifesto da própria release.
-3. Instala em `$PREFIX/bin/opencode2` + `$PREFIX/libexec/opencode2/` (o layout que o wrapper espera).
-4. Roda `opencode2 --version` — se o binário não rodar neste Android, ele grita em vez de fingir que deu certo.
-5. Cria o atalho `opencode` (só se você não tiver um `opencode` instalado, ex. a v1).
-6. Garante o `ripgrep`, que o agente usa para buscar arquivos.
+2. Confere se `unzip` e `curl` existem (já vêm no Termux) e instala se faltar.
+3. Descobre a release mais nova do [guysoft/opencode-termux](https://github.com/guysoft/opencode-termux) (o build Android do OpenCode).
+4. Baixa o zip e **confere o SHA256** contra o manifesto da própria release.
+5. Instala em `$PREFIX/bin/opencode2` + `$PREFIX/libexec/opencode2/` (o layout que o wrapper espera).
+6. Roda `opencode2 --version` — se o binário não rodar neste Android, ele grita em vez de fingir que deu certo.
+7. Cria o atalho `opencode` (só se você não tiver um `opencode` instalado, ex. a v1).
+8. Instala o `ripgrep` se faltar — é o `rg`, a busca de arquivos que o agente usa pra achar texto no seu projeto.
 
 Offline / zip já baixado: `OC_ZIP=<zip> OC_SUMS=<SHA256SUMS> bash install-termux.sh`.
 
