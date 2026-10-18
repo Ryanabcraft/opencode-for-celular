@@ -10,6 +10,14 @@ die() { echo "erro: $*" >&2; exit 1; }
 
 [ -n "${PREFIX:-}" ] && [ -d "$PREFIX/bin" ] || die "rode isto dentro do Termux"
 [ "$(uname -m)" = "aarch64" ] || die "só existe build arm64 (aarch64); este aparelho é $(uname -m)"
+
+# 0. Permissão de armazenamento: permite abrir projetos que estão no /sdcard
+#    (ex: ~/storage/shared/Download/meu-site). Pula se você já liberou e não é
+#    obrigatório pro OpenCode — se você negar a permissão, a instalação segue.
+if [ ! -e "$HOME/storage/shared" ] && command -v termux-setup-storage >/dev/null; then
+  echo "pedindo permissão de armazenamento — aceite na tela pra o OpenCode ver seus arquivos"
+  termux-setup-storage || true
+fi
 command -v unzip >/dev/null || die "falta unzip — rode: pkg install unzip"
 
 tmp=$(mktemp -d); trap 'rm -rf "$tmp"' EXIT
