@@ -29,7 +29,8 @@ Rodar o mesmo comando de novo **atualiza** para a release mais nova.
 
 ## O que o instalador faz
 
-1. Descobre a release mais nova do [guysoft/opencode-termux](https://github.com/guysoft/opencode-termux) (o build Android do OpenCode).
+1. Pede a permissão de armazenamento (`termux-setup-storage`) — só se você ainda não liberou, e negar não trava a instalação. É isso que deixa o OpenCode abrir projetos que estão no `/sdcard`.
+2. Descobre a release mais nova do [guysoft/opencode-termux](https://github.com/guysoft/opencode-termux) (o build Android do OpenCode).
 2. Baixa o zip e **confere o SHA256** contra o manifesto da própria release.
 3. Instala em `$PREFIX/bin/opencode2` + `$PREFIX/libexec/opencode2/` (o layout que o wrapper espera).
 4. Roda `opencode2 --version` — se o binário não rodar neste Android, ele grita em vez de fingir que deu certo.
@@ -68,6 +69,9 @@ pkg install -y git nodejs-lts python
 mkdir meu-site && cd meu-site && git init
 opencode
 ```
+
+O projeto está nos arquivos do celular (Downloads, Documentos)? O caminho é `~/storage/shared/...`
+— ex: `cd ~/storage/shared/Download/meu-site`. É pra isso que serve a permissão de armazenamento do passo 1.
 
 Peça o site normal. Para ver o resultado, suba um preview e abra no navegador do próprio celular:
 
