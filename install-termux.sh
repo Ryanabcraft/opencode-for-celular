@@ -7,6 +7,7 @@ die() { echo "erro: $*" >&2; exit 1; }
 
 [ -n "${PREFIX:-}" ] && [ -d "$PREFIX/bin" ] || die "rode isto dentro do Termux"
 [ "$(uname -m)" = aarch64 ] || die "só existe build arm64; este aparelho é $(uname -m)"
+export TMPDIR="${TMPDIR:-$PREFIX/tmp}"   # o app precisa de temp gravável (alguns shims não setam)
 
 # Libera os arquivos do celular (/sdcard). Inútil pro OpenCode em si: pule se já tem.
 if [ ! -e "$HOME/storage/shared" ] && command -v termux-setup-storage >/dev/null; then
@@ -40,9 +41,11 @@ fi
 
 unzip -q -o "$tmp/$file" -d "$tmp/x"
 mkdir -p "$DEST"
-cp "$tmp/x/opencode2" "$PREFIX/bin/opencode2"
-cp "$tmp/x/opencode2.bin" "$DEST/opencode2.bin"
-cp "$tmp/x/libopentui.so" "$DEST/libopentui.so"
+# Renomear por cima em vez de copiar direto: cp dá "Text file busy" com o opencode aberto
+put() { cp "$1" "$2.new" && mv -f "$2.new" "$2"; }
+put "$tmp/x/opencode2" "$PREFIX/bin/opencode2"
+put "$tmp/x/opencode2.bin" "$DEST/opencode2.bin"
+put "$tmp/x/libopentui.so" "$DEST/libopentui.so"
 chmod 755 "$PREFIX/bin/opencode2" "$DEST/opencode2.bin"; chmod 644 "$DEST/libopentui.so"
 
 "$PREFIX/bin/opencode2" --version || die "instalou mas não executou — github.com/$REPO/issues"
@@ -50,4 +53,4 @@ chmod 755 "$PREFIX/bin/opencode2" "$DEST/opencode2.bin"; chmod 644 "$DEST/libope
 command -v ripgrep >/dev/null || pkg install -y ripgrep >/dev/null 2>&1 \
   || echo "FALTA: rode 'pkg install ripgrep' — é a busca do agente"
 
-echo; echo "pronto. rode:  opencode"
+echo; echo "pronto. rode:  opencode   (se estava aberto, feche e abra de novo)"
